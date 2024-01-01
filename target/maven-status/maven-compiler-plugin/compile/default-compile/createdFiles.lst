@@ -1,0 +1,4 @@
+pe\emrx\learning\App.class
+pe\emrx\learning\dao\Dao.class
+pe\emrx\learning\utiles\EntityManagerUtil.class
+pe\emrx\learning\dominio\Reunion.class
