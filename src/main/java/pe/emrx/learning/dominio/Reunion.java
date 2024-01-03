@@ -47,6 +47,12 @@ public class Reunion {
         this.asunto = asunto;
     }
 
+    public Reunion(Reunion reunion) {
+        this();
+        this.fecha = reunion.fecha;
+        this.asunto = reunion.asunto;
+    }
+
     // getters and setters
     public int getId() {
         return id;

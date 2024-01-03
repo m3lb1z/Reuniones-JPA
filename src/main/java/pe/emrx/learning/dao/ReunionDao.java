@@ -6,7 +6,14 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
 
+import pe.emrx.learning.dominio.Persona;
 import pe.emrx.learning.dominio.Reunion;
 
 public class ReunionDao extends AbstractDao<Reunion> {
@@ -27,6 +34,20 @@ public class ReunionDao extends AbstractDao<Reunion> {
         LocalDate manyana = LocalDate.now().plus(1, ChronoUnit.DAYS);
         query.setParameter(1, manyana.atStartOfDay());
         query.setParameter(2, manyana.plus(1, ChronoUnit.DAYS).atStartOfDay());
+        return query.getResultList();
+    }
+
+    public List<Reunion> reunionesParticipante(String numEmple) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Reunion> criteriaQuery = cb.createQuery(Reunion.class);
+
+        Root<Persona> fromPersona = criteriaQuery.from(Persona.class);
+        criteriaQuery.where(cb.equal(fromPersona.get("numeroEmpleado"), numEmple));
+
+        Join<Persona, Reunion> joinReunion = fromPersona.join("reuniones", JoinType.INNER);
+
+        CriteriaQuery<Reunion> cq = criteriaQuery.multiselect(joinReunion);
+        TypedQuery<Reunion> query = getEntityManager().createQuery(cq);
         return query.getResultList();
     }
 }
